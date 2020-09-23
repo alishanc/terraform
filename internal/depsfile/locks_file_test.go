@@ -173,12 +173,10 @@ func TestSaveLocksToFile(t *testing.T) {
 	oneDotTwo := getproviders.MustParseVersion("1.2.0")
 	atLeastOneDotOh := getproviders.MustParseVersionConstraints(">= 1.0.0")
 	pessimisticOneDotOh := getproviders.MustParseVersionConstraints("~> 1")
-	hashes := map[getproviders.Platform][]string{
-		{OS: "riscos", Arch: "arm"}: {
-			"cccccccccccccccccccccccccccccccccccccccccccccccc",
-			"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-			"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-		},
+	hashes := []string{
+		"test:cccccccccccccccccccccccccccccccccccccccccccccccc",
+		"test:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+		"test:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
 	}
 	locks.SetProvider(fooProvider, oneDotOh, atLeastOneDotOh, hashes)
 	locks.SetProvider(barProvider, oneDotTwo, pessimisticOneDotOh, nil)
@@ -216,10 +214,7 @@ provider "registry.terraform.io/test/baz" {
 provider "registry.terraform.io/test/foo" {
   version     = "1.0.0"
   constraints = ">= 1.0.0"
-
-  hashes {
-    riscos_arm = ["aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "cccccccccccccccccccccccccccccccccccccccccccccccc"]
-  }
+  hashes      = ["test:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "test:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "test:cccccccccccccccccccccccccccccccccccccccccccccccc"]
 }
 `
 	if diff := cmp.Diff(wantContent, gotContent); diff != "" {
